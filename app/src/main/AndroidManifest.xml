@@ -28,7 +28,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.diewland.openthedoor.LivePreviewActivity" android:exported="true">
+        <activity android:name="com.diewland.openthedoor.LivePreviewActivity"
+                  android:exported="true">
         </activity>
 
     </application>

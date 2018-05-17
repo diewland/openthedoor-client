@@ -48,8 +48,11 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
   private final FirebaseVisionBarcodeDetector detector;
   private Context ctx;
   private String decode;
+  private String my_protocal;
+  private String my_ip;
+  private String my_port;
 
-  public BarcodeScanningProcessor(Context ctx) {
+  public BarcodeScanningProcessor(Context ctx, String protocal, String ip, String port) {
     // Note that if you know which format of barcode your app is dealing with, detection will be
     // faster to specify the supported barcode formats one by one, e.g.
     // new FirebaseVisionBarcodeDetectorOptions.Builder()
@@ -57,6 +60,13 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
     //     .build();
     detector = FirebaseVision.getInstance().getVisionBarcodeDetector();
     ctx = ctx;
+    my_protocal = protocal;
+    my_ip = ip;
+    my_port = port;
+
+    Log.d("hello", my_protocal);
+    Log.d("hello", my_ip);
+    Log.d("hello", my_port);
   }
 
   @Override
@@ -88,24 +98,24 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
       Log.d(TAG, decode);
 
       Activity this_act = (Activity) ctx;
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    String url_str = "http:10.4.202.76:5000/verify?t=" + decode;
-                    Log.d(TAG, url_str);
-                    new URL(url_str).openStream();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+      Thread thread = new Thread(new Runnable()
+      {
+          @Override
+          public void run()
+          {
+              try
+              {
+                  String url_str = my_protocal + "://"+ my_ip +":" + my_port + "/verify?t=" + decode;
+                  Log.d(TAG, url_str);
+                  new URL(url_str).openStream();
+              }
+              catch (Exception e)
+              {
+                  e.printStackTrace();
+              }
+          }
+      });
+      thread.start();
 
     }
   }

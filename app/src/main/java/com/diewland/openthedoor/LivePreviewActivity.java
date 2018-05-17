@@ -2,6 +2,7 @@ package com.diewland.openthedoor;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.diewland.openthedoor.MainActivity.MY_PREFS_NAME;
+
 @KeepName
 public class LivePreviewActivity extends AppCompatActivity implements OnRequestPermissionsResultCallback {
 
@@ -32,10 +35,20 @@ public class LivePreviewActivity extends AppCompatActivity implements OnRequestP
     private static final String TAG = "live-preview";
     private static final int PERMISSION_REQUESTS = 1;
 
+    private String protocal = "";
+    private String ip = "";
+    private String port = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         Log.d(TAG, "onCreate");
+
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        protocal = prefs.getString("protocal", "");
+        ip = prefs.getString("ip", "");
+        port = prefs.getString("port", "");
 
         setContentView(R.layout.live_preview);
 
@@ -49,13 +62,13 @@ public class LivePreviewActivity extends AppCompatActivity implements OnRequestP
         }
 
         if (allPermissionsGranted()) {
-            createCameraSource(selectedModel);
+            createCameraSource(selectedModel, protocal, ip, port);
         } else {
             getRuntimePermissions();
         }
     }
 
-    private void createCameraSource(String model) {
+    private void createCameraSource(String model, String protocal, String ip, String port) {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
             cameraSource = new CameraSource(this, graphicOverlay);
@@ -64,7 +77,7 @@ public class LivePreviewActivity extends AppCompatActivity implements OnRequestP
 
         try {
             Log.i(TAG, "Using QRCode Detector Processor");
-            cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor(this));
+            cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor(this, protocal, ip, port));
         } catch (Exception e) {
             Log.e(TAG, "can not create camera source: " + model);
         }
@@ -97,6 +110,12 @@ public class LivePreviewActivity extends AppCompatActivity implements OnRequestP
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        protocal = prefs.getString("protocal", "");
+        ip = prefs.getString("ip", "");
+        port = prefs.getString("port", "");
+
         startCameraSource();
     }
 
@@ -159,7 +178,7 @@ public class LivePreviewActivity extends AppCompatActivity implements OnRequestP
             int requestCode, String[] permissions, int[] grantResults) {
         Log.i(TAG, "Permission granted!");
         if (allPermissionsGranted()) {
-            createCameraSource(selectedModel);
+            createCameraSource(selectedModel, protocal, ip, port);
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

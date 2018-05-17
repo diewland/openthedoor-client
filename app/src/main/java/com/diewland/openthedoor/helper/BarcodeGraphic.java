@@ -25,9 +25,9 @@ import com.diewland.openthedoor.helper.GraphicOverlay.Graphic;
 /** Graphic instance for rendering Barcode position and content information in an overlay view. */
 public class BarcodeGraphic extends Graphic {
 
-  private static final int TEXT_COLOR = Color.WHITE;
+  private static final int TEXT_COLOR = Color.RED;
   private static final float TEXT_SIZE = 54.0f;
-  private static final float STROKE_WIDTH = 4.0f;
+  private static final float STROKE_WIDTH = 5.0f;
 
   private final Paint rectPaint;
   private final Paint barcodePaint;
@@ -68,6 +68,7 @@ public class BarcodeGraphic extends Graphic {
     canvas.drawRect(rect, rectPaint);
 
     // Renders the barcode at the bottom of the box.
-    canvas.drawText(barcode.getRawValue(), rect.left, rect.bottom, barcodePaint);
+    // canvas.drawText(barcode.getRawValue(), rect.left, rect.bottom, barcodePaint);
+    canvas.drawText("<==", rect.left, rect.bottom, barcodePaint);
   }
 }
