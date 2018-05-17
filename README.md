@@ -1,6 +1,10 @@
-# autofill-idcard-mlkit
-Autofill Thai ID Card by MLKit
+# Open the door~~
+Open the door demo by MLKit
 
-### References
-* https://github.com/firebase/quickstart-android/tree/master/mlkit
-* https://firebase.google.com/docs/ml-kit/android/recognize-text
+```
+   QRCode Scanner  <----- HTTP Request -----> Verify Server
+  ( android app )     ( text from QRCode )   ( python flask )
+```
+Projects
+ * https://github.com/diewland/openthedoor-client
+ * https://github.com/diewland/openthedoor-server
